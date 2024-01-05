@@ -1,6 +1,21 @@
-import { IsDateString, IsNotEmpty, IsString } from 'class-validator';
+import {
+  IsArray,
+  IsDateString,
+  IsMongoId,
+  IsNotEmpty,
+  IsString,
+} from 'class-validator';
+
+interface Item {
+  description: string;
+  value: number;
+}
 
 export class CreateProjectDto {
+  @IsMongoId()
+  @IsNotEmpty()
+  readonly user_id: string;
+
   @IsString()
   @IsNotEmpty()
   readonly name: string;
@@ -12,4 +27,8 @@ export class CreateProjectDto {
   @IsDateString()
   @IsNotEmpty()
   readonly end_date: string;
+
+  @IsArray()
+  @IsNotEmpty()
+  readonly items: Item[];
 }

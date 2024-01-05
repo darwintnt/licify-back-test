@@ -6,6 +6,9 @@ import { ProjectModule } from './modules/project/project.module';
 import { UserModule } from './modules/user/user.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { ConfigModule } from '@nestjs/config';
+import { MulterModule } from '@nestjs/platform-express';
+import { memoryStorage } from 'multer';
+import { ApplicationModule } from './modules/application/application.module';
 
 @Module({
   imports: [
@@ -14,9 +17,13 @@ import { ConfigModule } from '@nestjs/config';
       isGlobal: true,
     }),
     MongooseModule.forRoot(process.env.DB_URI),
+    MulterModule.register({
+      storage: memoryStorage(),
+    }),
     ProjectModule,
     AuthModule,
     UserModule,
+    ApplicationModule,
   ],
 })
 export class AppModule {}

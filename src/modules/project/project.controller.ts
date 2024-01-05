@@ -13,24 +13,30 @@ import {
 import { ProjectService } from './project.service';
 import { CreateProjectDto } from './dto/create-project.dto';
 import { UpdateProjectDto } from './dto/update-project.dto';
-import { FileInterceptor } from '@nestjs/platform-express/multer';
+import { FileFieldsInterceptor } from '@nestjs/platform-express';
+import { SharpPipe } from '../uploads/pipes/sharp-pipe/sharp-pipe';
 
 @Controller('project')
 export class ProjectController {
   constructor(private readonly projectService: ProjectService) {}
 
   @Post()
-  @UseInterceptors(FileInterceptor('file'))
+  @UseInterceptors(FileFieldsInterceptor([{ name: 'files' }]))
   async create(
-    @UploadedFile() file: Express.Multer.File,
+    @UploadedFile(SharpPipe) files: Array<Express.Multer.File>,
     @Body() createProjectDto: CreateProjectDto,
   ): Promise<any> {
-    return await this.projectService.create(createProjectDto, file);
+    return await this.projectService.create(createProjectDto, files);
   }
 
-  @Get()
+  @Get(':id')
   findAll(@Query() { limit, skip }) {
     return this.projectService.findAll(limit, skip);
+  }
+
+  @Get('/constructor/history')
+  findByUserId(@Query() { id, limit, skip }) {
+    return this.projectService.findByUserId(id, limit, skip);
   }
 
   @Get(':id')
