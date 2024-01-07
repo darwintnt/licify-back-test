@@ -3,20 +3,20 @@ import {
   Get,
   Post,
   Body,
-  Patch,
   Param,
-  Delete,
   Query,
   UseInterceptors,
   UploadedFile,
 } from '@nestjs/common';
 import { ProjectService } from './project.service';
 import { CreateProjectDto } from './dto/create-project.dto';
-import { UpdateProjectDto } from './dto/update-project.dto';
 import { FileFieldsInterceptor } from '@nestjs/platform-express';
 import { SharpPipe } from '../uploads/pipes/sharp-pipe/sharp-pipe';
 
-@Controller('project')
+@Controller({
+  version: '1',
+  path: 'project',
+})
 export class ProjectController {
   constructor(private readonly projectService: ProjectService) {}
 
@@ -29,7 +29,7 @@ export class ProjectController {
     return await this.projectService.create(createProjectDto, files);
   }
 
-  @Get(':id')
+  @Get()
   findAll(@Query() { limit, skip }) {
     return this.projectService.findAll(limit, skip);
   }
@@ -41,16 +41,6 @@ export class ProjectController {
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.projectService.findOne(+id);
-  }
-
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateProjectDto: UpdateProjectDto) {
-    return this.projectService.update(+id, updateProjectDto);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.projectService.remove(+id);
+    return this.projectService.findOne(id);
   }
 }

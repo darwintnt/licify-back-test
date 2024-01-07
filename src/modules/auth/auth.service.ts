@@ -14,7 +14,7 @@ export class AuthService {
 
   async login(
     loginDto: LoginDto,
-  ): Promise<{ access_token: string; id: string }> {
+  ): Promise<{ access_token: string; id: string; role: string }> {
     const { email, password } = loginDto;
 
     const user = await this.userService.getUser({ email });
@@ -31,10 +31,6 @@ export class AuthService {
 
     const token = this.jwtService.sign({ id: user.email });
 
-    return { access_token: token, id: user.email };
-  }
-
-  logout() {
-    return `This action returns all auth`;
+    return { access_token: token, id: user._id.toString(), role: user.role };
   }
 }

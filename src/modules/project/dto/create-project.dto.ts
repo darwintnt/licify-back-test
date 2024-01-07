@@ -14,7 +14,7 @@ interface Item {
 export class CreateProjectDto {
   @IsMongoId()
   @IsNotEmpty()
-  readonly user_id: string;
+  user_id: string;
 
   @IsString()
   @IsNotEmpty()

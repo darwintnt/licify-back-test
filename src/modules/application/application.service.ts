@@ -1,6 +1,5 @@
 import { Injectable } from '@nestjs/common';
 import { CreateApplicationDto } from './dto/create-application.dto';
-import { UpdateApplicationDto } from './dto/update-application.dto';
 import {
   Application,
   ApplicationDocument,
@@ -17,7 +16,11 @@ export class ApplicationService {
   ) {}
 
   async create(params: CreateApplicationDto) {
-    return await this.applicationModel.create(params);
+    return await this.applicationModel.create({
+      ...params,
+      user_id: new ObjectId(params.user_id),
+      project_id: new ObjectId(params.project_id),
+    });
   }
 
   async findByProjectId(projectId: string) {

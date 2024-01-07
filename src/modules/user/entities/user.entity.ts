@@ -1,5 +1,5 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Document } from 'mongoose';
+import { Document, Types } from 'mongoose';
 
 export type UserDocument = User & Document;
 
@@ -7,6 +7,8 @@ export type UserDocument = User & Document;
   timestamps: true,
 })
 export class User {
+  _id: Types.ObjectId;
+
   @Prop({ required: true })
   name: string;
 
@@ -18,12 +20,6 @@ export class User {
 
   @Prop({ required: true })
   role: string;
-
-  // @Prop({ type: [{ type: Types.ObjectId, ref: Application.name }] })
-  // applications: Types.Array<Application>;
-
-  // @Prop({ type: [{ type: Types.ObjectId, ref: Project.name }] })
-  // projects: Types.Array<Project>;
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);
