@@ -45,7 +45,7 @@ export class ProjectService {
     const count = await this.projectModel.countDocuments({}).exec();
     const page_total = Math.floor((count - 1) / limit) + 1;
     const data = await this.projectModel
-      .find({ user_id: userId })
+      .find({ user_id: new ObjectId(userId) })
       .limit(limit)
       .skip(skip)
       .sort({ createdAt: -1 })
