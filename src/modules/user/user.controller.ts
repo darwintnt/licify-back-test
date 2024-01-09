@@ -4,7 +4,6 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { JwtAuthGuard } from '../auth/guards/jwt.auth.guard';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 
-@UseGuards(JwtAuthGuard)
 @ApiTags('Users')
 @Controller({
   version: '1',
@@ -18,6 +17,7 @@ export class UserController {
     return this.userService.create(createUserDto);
   }
 
+  @UseGuards(JwtAuthGuard)
   @ApiBearerAuth()
   @Get(':id')
   findById(@Param('id') id: string) {
