@@ -5,14 +5,16 @@ import {
   Body,
   Param,
   Query,
-  UseInterceptors,
-  UploadedFile,
+  UseGuards,
 } from '@nestjs/common';
 import { ProjectService } from './project.service';
 import { CreateProjectDto } from './dto/create-project.dto';
-import { FileFieldsInterceptor } from '@nestjs/platform-express';
-import { SharpPipe } from '../uploads/pipes/sharp-pipe/sharp-pipe';
+import { JwtAuthGuard } from '../auth/guards/jwt.auth.guard';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 
+@UseGuards(JwtAuthGuard)
+@ApiTags('Projects')
+@ApiBearerAuth()
 @Controller({
   version: '1',
   path: 'project',
@@ -21,12 +23,8 @@ export class ProjectController {
   constructor(private readonly projectService: ProjectService) {}
 
   @Post()
-  @UseInterceptors(FileFieldsInterceptor([{ name: 'files' }]))
-  async create(
-    @UploadedFile(SharpPipe) files: Array<Express.Multer.File>,
-    @Body() createProjectDto: CreateProjectDto,
-  ): Promise<any> {
-    return await this.projectService.create(createProjectDto, files);
+  async create(@Body() createProjectDto: CreateProjectDto): Promise<any> {
+    return await this.projectService.create(createProjectDto);
   }
 
   @Get()

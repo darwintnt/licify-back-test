@@ -38,8 +38,8 @@ export class ApplicationService {
     const count = await this.applicationModel.countDocuments({}).exec();
     const page_total = Math.floor((count - 1) / limit) + 1;
     const data = await this.applicationModel
-      .find({ user_id: providerId })
-      .populate(['project_id'])
+      .find({ user_id: new ObjectId(providerId) })
+      .populate('project_id', '_id name')
       .limit(limit)
       .skip(skip)
       .sort({ createdAt: -1 })

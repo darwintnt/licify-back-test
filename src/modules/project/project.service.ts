@@ -2,7 +2,6 @@ import { Injectable } from '@nestjs/common';
 import { CreateProjectDto } from './dto/create-project.dto';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { UploadsService } from '../uploads/uploads.service';
 import { Project, ProjectDocument } from './entities/project.entity';
 import { ObjectId } from 'mongodb';
 
@@ -11,18 +10,14 @@ export class ProjectService {
   constructor(
     @InjectModel(Project.name)
     private readonly projectModel: Model<ProjectDocument>,
-    private readonly uploadsService: UploadsService,
   ) {}
 
-  async create(params: CreateProjectDto, file: any) {
-    const images = await this.uploadsService.uploadFile(file);
-
+  async create(params: CreateProjectDto) {
     return {
       data: await this.projectModel.create({
         ...params,
         user_id: new ObjectId(params.user_id),
       }),
-      images,
     };
   }
 

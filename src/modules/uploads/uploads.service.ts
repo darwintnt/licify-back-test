@@ -2,9 +2,6 @@ import { Injectable } from '@nestjs/common';
 
 import { PutObjectCommand, S3Client } from '@aws-sdk/client-s3';
 
-import * as fs from 'fs';
-import * as path from 'path';
-
 @Injectable()
 export class UploadsService {
   AWS_S3_BUCKET = process.env.AWS_BUCKET;
@@ -17,15 +14,18 @@ export class UploadsService {
     },
   });
 
-  async uploadFile(file: string) {
-    if (file) {
-      const buffer = fs.readFileSync(path.join('files', file));
-
-      return await this.upload(buffer, this.AWS_S3_BUCKET, file, 'image/webp');
+  async uploadFile(data: any) {
+    if (data.file) {
+      return await this.upload(
+        data.file,
+        this.AWS_S3_BUCKET,
+        data.name,
+        'image/webp',
+      );
     }
   }
 
-  async upload(file, bucket, name, mimetype) {
+  async upload(file: any, bucket: string, name: string, mimetype: string) {
     try {
       const params = {
         Body: file,
@@ -36,17 +36,15 @@ export class UploadsService {
 
       const command = new PutObjectCommand(params);
 
-      return await this.s3.send(command).then(
-        (data) => {
-          console.log(data);
-          fs.unlinkSync(path.join('files', name));
+      return {
+        data: {
+          metadata: await this.s3.send(command),
+          fileName: `${process.env.AWS_URL_BUCKET}/${name}`,
         },
-        (error) => {
-          console.log(error);
-        },
-      );
+      };
     } catch (e) {
       console.log(e);
+      return e;
     }
   }
 }

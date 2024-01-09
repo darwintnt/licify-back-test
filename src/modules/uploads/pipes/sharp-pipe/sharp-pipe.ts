@@ -4,23 +4,25 @@ import * as sharp from 'sharp';
 
 @Injectable()
 export class SharpPipe
-  implements PipeTransform<Array<Express.Multer.File>, Promise<Array<string>>>
+  implements PipeTransform<Express.Multer.File, Promise<any>>
 {
-  async transform(files: Array<Express.Multer.File>): Promise<Array<string>> {
-    if (files) {
-      const fileNames = files.map((image) => {
-        const originalName = path.parse(image.originalname).name;
-        const filename = Date.now() + '-' + originalName + '.webp';
+  async transform(file: Express.Multer.File): Promise<any> {
+    if (file) {
+      const originalName = path.parse(
+        file.originalname.trim().replace(/\s+/g, ''),
+      ).name;
 
-        sharp(image.buffer)
-          .resize(800)
-          .webp({ effort: 3 })
-          .toFile(path.join('files', filename));
+      const filename: string = Date.now() + '_' + originalName + '.webp';
 
-        return filename;
-      });
+      const converter = await sharp(file.buffer)
+        .resize(800)
+        .webp({ effort: 3 })
+        .toBuffer();
 
-      return fileNames;
+      return {
+        name: filename,
+        file: converter,
+      };
     }
   }
 }

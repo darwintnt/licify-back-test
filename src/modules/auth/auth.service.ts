@@ -29,7 +29,7 @@ export class AuthService {
       throw new UnauthorizedException('Invalid email or password');
     }
 
-    const token = this.jwtService.sign({ id: user.email });
+    const token = this.jwtService.sign({ id: user._id.toString() });
 
     return { access_token: token, id: user._id.toString(), role: user.role };
   }

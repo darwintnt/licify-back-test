@@ -1,7 +1,20 @@
-import { Controller, Get, Post, Body, Param, Query } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Param,
+  Query,
+  UseGuards,
+} from '@nestjs/common';
 import { ApplicationService } from './application.service';
 import { CreateApplicationDto } from './dto/create-application.dto';
+import { JwtAuthGuard } from '../auth/guards/jwt.auth.guard';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 
+@UseGuards(JwtAuthGuard)
+@ApiTags('Applications')
+@ApiBearerAuth()
 @Controller({
   version: '1',
   path: 'application',

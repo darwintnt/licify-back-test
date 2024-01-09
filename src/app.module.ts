@@ -9,6 +9,7 @@ import { ConfigModule } from '@nestjs/config';
 import { MulterModule } from '@nestjs/platform-express';
 import { memoryStorage } from 'multer';
 import { ApplicationModule } from './modules/application/application.module';
+import { UploadsModule } from './modules/uploads/uploads.module';
 
 @Module({
   imports: [
@@ -24,6 +25,7 @@ import { ApplicationModule } from './modules/application/application.module';
     AuthModule,
     UserModule,
     ApplicationModule,
+    UploadsModule,
   ],
 })
 export class AppModule {}
