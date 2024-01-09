@@ -52,4 +52,12 @@ export class CreateProjectDto {
   @IsArray()
   @IsNotEmpty()
   readonly items: Item[];
+
+  @ApiProperty({
+    isArray: true,
+    required: true,
+  })
+  @IsArray()
+  @IsNotEmpty()
+  readonly images: string[];
 }

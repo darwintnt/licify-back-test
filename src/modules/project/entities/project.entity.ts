@@ -27,6 +27,9 @@ export class Project {
 
   @Prop({ required: true })
   items: Array<Item>;
+
+  @Prop({ required: true })
+  images: Array<string>;
 }
 
 export const ProjectSchema = SchemaFactory.createForClass(Project);
